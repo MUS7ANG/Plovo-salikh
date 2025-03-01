@@ -1,23 +1,27 @@
 import { Card, CardContent, Typography } from "@mui/material";
-import { Dish } from "../../types.ts";
+import { IDish } from "../../types";
 import { useNavigate } from "react-router-dom";
 
-interface DishCardProps {
-    dish: Dish;
+interface Props {
+    dish: IDish;
 }
 
-export const DishCard: React.FC<DishCardProps> = ({ dish }) => {
+const DishCard: React.FC<Props> = ({ dish }) => {
     const navigate = useNavigate();
 
     return (
         <Card
-            sx={{ marginBottom: 2, cursor: "pointer" }}
-            onClick={() => navigate(`/dish/${dish.id}`)}
+            sx={{ maxWidth: 345, cursor: "pointer", margin: 2 }}
+            onClick={() => navigate(`/dishes/${dish.id}`)}
         >
             <CardContent>
-                <Typography variant="h6">{dish.name}</Typography>
-                <Typography variant="body1">{dish.price} ₽</Typography>
+                <Typography variant="h5">{dish.name}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                    Цена: {dish.price} сом
+                </Typography>
             </CardContent>
         </Card>
-    )
-}
+    );
+};
+
+export default DishCard;

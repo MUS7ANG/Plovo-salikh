@@ -1,16 +1,22 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/home/home.tsx";
-import { DishPage } from "./pages/dishPage/dishPage.tsx";
-import { EditDish } from "./pages/editDish/editDish.tsx";
+import Home from "./pages/home/home";
+import DishDetail from "./pages/dishDetail/dishDetail";
+import EditDish from "./pages/editDish/editDish";
+import DishPage from "./pages/dishPage/dishPage";
 
-export const App: React.FC = () => {
+console.log("App загружен");
+
+function App() {
     return (
         <Router>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/dish/:id" element={<DishPage />} />
-                <Route path="/edit/:id" element={<EditDish />} />
+                <Route path="/dishes/:id" element={<DishDetail />} />
+                <Route path="/dishes/:id/edit" element={<EditDish />} />
+                <Route path="/add-dish" element={<DishPage />} />
             </Routes>
         </Router>
     );
-};
+}
+
+export default App;

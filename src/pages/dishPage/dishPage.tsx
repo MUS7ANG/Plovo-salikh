@@ -1,46 +1,30 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Container, Typography, Button } from "@mui/material";
-import axios from "axios";
-import { Dish } from "../../types";
+import { useState } from "react";
+import { DishForm } from "../../components/dishForm/dishForm";
+import { IDishShort } from "../../types";
+import axiosApi from "../../axiosApi";
+import { useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
 
-export const DishPage: React.FC = () => {
-    const { id } = useParams();
+const DishPage = () => {
     const navigate = useNavigate();
-    const [dish, setDish] = useState<Dish | null>(null);
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        const fetchDish = async () => {
-            try {
-                const { data } = await axios.get<Dish>(`/dishes/${id}`);
-                setDish(data);
-            } catch (error) {
-                console.error("Ошибка загрузки блюда:", error);
-            }
-        };
-
-        fetchDish();
-    }, [id]);
-
-    const handleDelete = async () => {
+    const addDishHandler = async (dishData: IDishShort) => {
+        setLoading(true);
         try {
-            await axios.delete(`/dishes/${id}`);
+            await axiosApi.post("/dishes.json", dishData);
             navigate("/");
-        } catch (error) {
-            console.error("Ошибка удаления блюда:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    if (!dish) return <Typography>Загрузка...</Typography>;
-
     return (
-        <Container>
-            <Typography variant="h4">{dish.name}</Typography>
-            <Typography variant="h6">Цена: {dish.price} ₽</Typography>
-            <Typography variant="body1">{dish.description}</Typography>
-            <Button variant="contained" color="error" onClick={handleDelete} sx={{ mt: 2 }}>
-                Удалить блюдо
-            </Button>
-        </Container>
+        <div>
+            {loading && <CircularProgress />}
+            <DishForm onSubmit={addDishHandler} />
+        </div>
     );
 };
+
+export default DishPage;

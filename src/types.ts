@@ -1,19 +1,13 @@
-export interface Dish {
-    id: string;
-    name: string;
-    price: number;
-    description?: string;
-}
-
 export interface IDishShort {
-    name: string
-    description: string
-    price: number
+    name: string;
+    description: string;
+    price: number;
 }
 
 export interface IDish extends IDishShort {
-    id: string
+    id: string;
 }
+
 export interface IDishesList {
-    [id:string]: IDishShort
+    [id: string]: IDishShort;
 }

@@ -1,35 +1,46 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { Dish } from "../../types";
-import { DishForm } from "../../components/dishForm/dishForm.tsx";
+import axiosApi from "../../axiosApi";
+import { IDish } from "../../types";
+import { DishForm } from "../../components/dishForm/dishForm";
+import { CircularProgress } from "@mui/material";
 
-export const EditDish: React.FC = () => {
-    const { id } = useParams();
+const EditDish = () => {
+    const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const [dish, setDish] = useState<Dish | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [dishData, setDishData] = useState<IDish | null>(null);
 
     useEffect(() => {
         const fetchDish = async () => {
             try {
-                const { data } = await axios.get<Dish>(`/dishes/${id}`);
-                setDish(data);
+                setLoading(true);
+                const response = await axiosApi.get<IDish | null>(`/dishes/${id}.json`);
+                setDishData(response.data);
             } catch (error) {
-                console.error("Ошибка загрузки блюда:", error);
+                console.error("Ошибка при загрузке блюда:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchDish();
     }, [id]);
 
-    const handleUpdate = async (updatedDish: Dish) => {
+    const handleEditDish = async (updatedDish: IDish) => {
+        setLoading(true);
         try {
-            await axios.put(`/dishes/${id}`, updatedDish);
+            await axiosApi.put(`/dishes/${id}.json`, updatedDish);
             navigate("/");
-        } catch (error) {
-            console.error("Ошибка обновления блюда:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    return dish ? <DishForm initialData={dish} onSubmit={handleUpdate} /> : <p>Загрузка...</p>;
+    if (loading) return <CircularProgress />;
+    if (!dishData) return <p>Блюдо не найдено</p>;
+
+    return <DishForm onSubmit={handleEditDish} initialData={dishData} />;
 };
+
+export default EditDish;

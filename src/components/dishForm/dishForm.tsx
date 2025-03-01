@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { TextField, Button, Box } from "@mui/material";
-import { Dish } from "../../types";
+import { IDish } from "../../types";
 
 interface DishFormProps {
-    initialData?: Dish;
-    onSubmit: (dish: Dish) => void;
+    initialData?: IDish;
+    onSubmit: (dish: IDish) => void;
 }
 
 export const DishForm: React.FC<DishFormProps> = ({ initialData, onSubmit }) => {
-    const [dish, setDish] = useState<Dish>(
+    const [dish, setDish] = useState<IDish>(
         initialData || { id: "", name: "", price: 0, description: "" }
     );
 
