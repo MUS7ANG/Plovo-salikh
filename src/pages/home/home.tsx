@@ -20,20 +20,18 @@ const Home: React.FC = () => {
 
                 console.log("✅ Ответ от Firebase:", response.data);
 
-                const dishesData = response.data ?? {};
-
-                if (Object.keys(dishesData).length === 0) {
+                if (!response.data) {
                     console.warn("⚠ В базе данных пусто!");
                     setDishes([]);
                     return;
                 }
 
-                const newDishes: IDish[] = Object.keys(dishesData).map((key) => ({
+                const newDishes: IDish[] = Object.entries(response.data).map(([key, value]) => ({
                     id: key,
-                    ...dishesData[key],
+                    ...value,
                 }));
 
-                console.log("📌 Преобразованные данные:", newDishes);
+                console.log("📌 Преобразованные блюда:", newDishes);
                 setDishes(newDishes);
             } catch (error) {
                 console.error("❌ Ошибка при загрузке блюд:", error);
@@ -56,12 +54,11 @@ const Home: React.FC = () => {
             </div>
 
             {loading && <CircularProgress />}
-
             {!loading && dishes.length === 0 && <p style={{ textAlign: "center" }}>⚠ Нет блюд в базе</p>}
 
             <Grid container spacing={2}>
-                {dishes.map((dish, index) => (
-                    <Grid item xs={12} sm={6} md={4} key={dish.id || index}>
+                {dishes.map((dish) => (
+                    <Grid item xs={12} sm={6} md={4} key={dish.id}>
                         <DishCard dish={dish} />
                     </Grid>
                 ))}

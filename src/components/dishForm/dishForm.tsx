@@ -4,12 +4,12 @@ import { IDish } from "../../types";
 
 interface DishFormProps {
     initialData?: IDish;
-    onSubmit: (dish: IDish) => void;
+    onSubmit: (dish: Partial<IDish>) => void;
 }
 
 export const DishForm: React.FC<DishFormProps> = ({ initialData, onSubmit }) => {
-    const [dish, setDish] = useState<IDish>(
-        initialData || { id: "", name: "", price: 0, description: "" }
+    const [dish, setDish] = useState<Partial<IDish>>(
+        initialData || { name: "", price: 0, description: "" }
     );
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
